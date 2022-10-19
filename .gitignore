@@ -1,0 +1,2 @@
+# Ignore SpotifyD binary and lib files
+resources/lib/spotifyd/
