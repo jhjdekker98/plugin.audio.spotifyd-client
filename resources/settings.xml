@@ -1,0 +1,1 @@
+<setting label="Spotify API key" type="string" id="apikey" default=""/>
