@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.audio.spotifyd-client" name="SpotifyD Client" version="0.0.1" provider-name="jhjdekker98">
+<addon id="plugin.audio.spotifyd-client" name="SpotifyD Client" version="0.2.0" provider-name="jhjdekker98">
     <requires>
         <import addon="xbmc.python" version="3.0.0" />
+        <import addon="script.module.requests" version="2.27.1"/>
         <import addon="xbmc.gui" version="5.15.0" />
     </requires>
-    <extension point="xbmc.python.pluginsource" library="addon.py">
-        <provides>audio</provides>
+    <extension point="xbmc.python.script" library="addon.py">
+        <provides>executable</provides>
     </extension>
+    <extension point="xbmc.service" library="service.py" start="login"></extension>
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">SpotifyD Client</summary>
         <description lang="en_GB">A simple KODI client wrapper for SpotifyD</description>

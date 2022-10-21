@@ -1,1 +1,29 @@
-<setting label="Spotify API key" type="string" id="apikey" default=""/>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings version="1">
+<section id="plugin.audio.spotifyd-client">
+    <category id="general" label="General" help="">
+        <group id="1" label="API Settings">
+            <setting label="Client ID" type="string" id="clientId">
+                <level>0</level>
+                <default/>
+                <constraints>
+                    <allowempty>true</allowempty>
+                </constraints>
+                <control type="edit" format="string">
+                    <heading>clientId</heading>
+                </control>
+            </setting>
+            <setting label="Client Secret" type="string" id="clientSecret">
+                <level>0</level>
+                <default/>
+                <constraints>
+                    <allowempty>true</allowempty>
+                </constraints>
+                <control type="edit" format="string">
+                    <heading>clientSecret</heading>
+                </control>
+            </setting>
+        </group>
+    </category>
+</section>
+</settings>

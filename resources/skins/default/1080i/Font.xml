@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fonts>
+    <fontset id="Default">
+        <font>
+            <name>font12</name>
+            <filename>NotoSans-Regular.ttf</filename>
+            <size>12</size>
+        </font>
+        <font>
+            <name>font13</name>
+            <filename>NotoSans-Regular.ttf</filename>
+            <size>13</size>
+        </font>
+        <font>
+            <name>font14</name>
+            <filename>NotoSans-Regular.ttf</filename>
+            <size>14</size>
+        </font>
+    </fontset>
+    <fontset id="Montserrat">
+        <font>
+            <name>font_reg_l</name>
+            <filename>Montserrat-Regular.ttf</filename>
+            <size>22</size>
+        </font>
+        <font>
+            <name>font_bold_l</name>
+            <filename>Montserrat-Bold.ttf</filename>
+            <size>22</size>
+        </font>
+        <font>
+            <name>font_thin_l</name>
+            <filename>Montserrat-Thin.ttf</filename>
+            <size>22</size>
+        </font>
+
+        <font>
+            <name>font_reg_m</name>
+            <filename>Montserrat-Regular.ttf</filename>
+            <size>16</size>
+        </font>
+        <font>
+            <name>font_bold_m</name>
+            <filename>Montserrat-Bold.ttf</filename>
+            <size>16</size>
+        </font>
+        <font>
+            <name>font_thin_m</name>
+            <filename>Montserrat-Thin.ttf</filename>
+            <size>16</size>
+        </font>
+
+        <font>
+            <name>font_reg_s</name>
+            <filename>Montserrat-Regular.ttf</filename>
+            <size>12</size>
+        </font>
+        <font>
+            <name>font_bold_s</name>
+            <filename>Montserrat-Bold.ttf</filename>
+            <size>12</size>
+        </font>
+        <font>
+            <name>font_thin_s</name>
+            <filename>Montserrat-Thin.ttf</filename>
+            <size>12</size>
+        </font>
+    </fontset>
+</fonts>

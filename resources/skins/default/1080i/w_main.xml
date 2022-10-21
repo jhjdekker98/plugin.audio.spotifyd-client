@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<window>
+    <backgroundcolor>0xff042004</backgroundcolor>
+    <views>50</views>
+    <controls>
+        <control type="image" id="1">
+            <left>640</left>
+            <top>100</top>
+            <width>640</width>
+            <height>640</height>
+            <visible>true</visible>
+            <colordiffuse>FFFFFFFF</colordiffuse>
+            <fadetime>200</fadetime>
+            <texture border="5">$INFO[window.property(albumArt)]</texture>
+            <aspectratio>keep</aspectratio>
+            <background>true</background>
+        </control>
+        <control type="label" id="1">
+            <top>720</top>
+            <height>100</height>
+            <align>center</align>
+            <label fallback="Song Title">$INFO[window.property(currSong)]</label>
+            <font>WeatherTemp</font>
+            <scroll>true</scroll>
+            <textcolor>FFFFFFFF</textcolor>
+        </control>
+        <control type="label" id="1">
+            <top>880</top>
+            <height>100</height>
+            <align>center</align>
+            <label fallback="Song Artist">$INFO[window.property(currArtist)]</label>
+            <font>font_clock</font>
+            <scroll>true</scroll>
+            <textcolor>FFFFFFFF</textcolor>
+        </control>
+    </controls>
+</window>
