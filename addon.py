@@ -2,7 +2,7 @@ import xbmc, xbmcaddon, xbmcgui
 import service
 import os
 import requests, base64
-import threading
+import threading, _thread
 import time
 
 SPOTIFYD_LOG_READ_LINE_AMOUNT = 100
@@ -28,12 +28,38 @@ def writeResponse(response):
     f.write(str(response.content) + "\n\n")
     f.close()
 
+def signatureSuicide(signature):
+    lines = []
+    if os.path.exists('/tmp/runningproc.cfg'):
+        # Check signature list
+        f = open('/tmp/runningproc.cfg', 'r')
+        lines = f.read().splitlines()
+        f.close()
+    while len(lines) < 2:
+        lines.insert(0, '')
+
+    # If LAST signature is OWN signature
+    if lines[len(lines)-1] == signature:
+        return
+    # If second-to-last signature is OWN signature
+    if lines[len(lines)-2] == signature:
+        #kill self
+        #TODO: Remove all occurrences of own signature from file
+        _thread.interrupt_main()
+        _thread.exit()
+    # Write own signature at bottom of list
+    f = open("/tmp/runningproc.cfg", "a")
+    f.write(signature + "\n")
+    f.close()
+
 def updateTrackData(window):
     accessToken = ''
     accessTokenExpire = 0
     lastTrackId = ''
+    signature = base64.b64encode(str(int(time.time())).encode('ascii')).decode('ascii')
 
     while True:
+        signatureSuicide(signature)
         trackData = getTrackData(lastTrackId, accessToken, accessTokenExpire)
         if trackData != None:
             accessToken = trackData["accessToken"]
