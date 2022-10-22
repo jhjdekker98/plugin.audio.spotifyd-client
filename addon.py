@@ -22,13 +22,6 @@ class GUI(xbmcgui.WindowXML):
     def onInit(self):
         xbmc.executebuiltin('Container.SetViewMode(50)')
 
-def writeResponse(response):
-    f = open("/tmp/responses.log", "a")
-    f.write(str(response) + "\n")
-    f.write(str(response.headers) + "\n")
-    f.write(str(response.content) + "\n\n")
-    f.close()
-
 def signatureSuicide(signature):
     lines = []
     if os.path.exists(THREAD_LIST_FILE_PATH):
@@ -76,10 +69,6 @@ def getTrackData(lastTrackId, accessToken, accessTokenExpire):
     if(trackId == None or trackId == lastTrackId):
         return None
 
-    f = open("/tmp/test.log", "w")
-    f.write(trackId)
-    f.close()
-
     currTime = int(time.time())
 
     if currTime >= accessTokenExpire:
@@ -91,7 +80,6 @@ def getTrackData(lastTrackId, accessToken, accessTokenExpire):
         headers = {'Authorization': f'Basic {b64}'}
         body = {'grant_type': 'client_credentials'}
         response = requests.post(SPOTIFY_API_URL_TOKEN, headers=headers, data=body)
-        writeResponse(response)
         accessToken = response.json()['access_token']
         accessTokenExpire = currTime + response.json()['expires_in']
 
@@ -101,7 +89,6 @@ def getTrackData(lastTrackId, accessToken, accessTokenExpire):
         'Authorization': 'Bearer ' + accessToken
     }
     response = requests.get(SPOTIFY_API_URL_TRACK + trackId, headers=headers)
-    writeResponse(response)
     return {
         'accessToken': accessToken,
         'accessTokenExpire': accessTokenExpire,
