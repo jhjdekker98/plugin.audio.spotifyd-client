@@ -8,6 +8,7 @@ import time
 SPOTIFYD_LOG_READ_LINE_AMOUNT = 100
 SPOTIFY_API_URL_TOKEN = 'https://accounts.spotify.com/api/token'
 SPOTIFY_API_URL_TRACK = 'https://api.spotify.com/v1/tracks/'
+THREAD_LIST_FILE_PATH = '/tmp/runningproc.cfg'
 
 currSong = '<song>'
 currArtist = '<artist>'
@@ -30,9 +31,9 @@ def writeResponse(response):
 
 def signatureSuicide(signature):
     lines = []
-    if os.path.exists('/tmp/runningproc.cfg'):
+    if os.path.exists(THREAD_LIST_FILE_PATH):
         # Check signature list
-        f = open('/tmp/runningproc.cfg', 'r')
+        f = open(THREAD_LIST_FILE_PATH, 'r')
         lines = f.read().splitlines()
         f.close()
     while len(lines) < 2:
@@ -48,8 +49,8 @@ def signatureSuicide(signature):
         _thread.interrupt_main()
         _thread.exit()
     # Write own signature at bottom of list
-    f = open("/tmp/runningproc.cfg", "a")
-    f.write(signature + "\n")
+    f = open(THREAD_LIST_FILE_PATH, 'a')
+    f.write(signature + '\n')
     f.close()
 
 def updateTrackData(window):
@@ -72,8 +73,12 @@ def updateTrackData(window):
 
 def getTrackData(lastTrackId, accessToken, accessTokenExpire):
     trackId = getTrackId()
-    if(trackId == lastTrackId):
+    if(trackId == None or trackId == lastTrackId):
         return None
+
+    f = open("/tmp/test.log", "w")
+    f.write(trackId)
+    f.close()
 
     currTime = int(time.time())
 
@@ -106,11 +111,15 @@ def getTrackData(lastTrackId, accessToken, accessTokenExpire):
 
 def getTrackId():
     addonPath = service.getAddonPath()
-    output = os.popen(f'tail {addonPath}songs.log -n {SPOTIFYD_LOG_READ_LINE_AMOUNT} | grep Loading | tail -1').read()
-    x = output.find('<spotify:track:')
-    if (x == -1):
+    f = open(f'{addonPath}songs.log', 'r', -1, 'utf-8')
+    songLog = f.read().splitlines()
+    f.close()
+    songLog = [k for k in songLog if '<spotify:track:' in k]
+    if len(songLog) == 0:
         return None
-    return output[x+15:-2]
+    songLine = songLog[len(songLog)-1]
+    x = songLine.find('<spotify:track:')
+    return songLine[x+15:-1]
 
 if (__name__ == '__main__'):
     xbmc.executebuiltin('Dialog.Close(busydialog)')
