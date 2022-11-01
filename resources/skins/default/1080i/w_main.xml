@@ -4,6 +4,18 @@
     <views>50</views>
     <controls>
         <control type="image" id="1">
+            <left>0</left>
+            <top>-420</top>
+            <width>1920</width>
+            <height>1920</height>
+            <visible>true</visible>
+            <colordiffuse>FFFFFFFF</colordiffuse>
+            <fadetime>200</fadetime>
+            <texture border="5">$INFO[window.property(albumArtBg)]</texture>
+            <aspectratio>keep</aspectratio>
+            <background>true</background>
+        </control>
+        <control type="image" id="1">
             <left>640</left>
             <top>100</top>
             <width>640</width>

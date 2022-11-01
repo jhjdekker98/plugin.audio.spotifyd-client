@@ -1,9 +1,10 @@
 import xbmc, xbmcaddon, xbmcgui
 import service
 import os
-import requests, base64
+import requests, base64, shutil
 import threading, _thread
 import time
+from PIL import Image, ImageFilter
 
 SPOTIFYD_LOG_READ_LINE_AMOUNT = 100
 SPOTIFY_API_URL_TOKEN = 'https://accounts.spotify.com/api/token'
@@ -58,11 +59,13 @@ def updateTrackData(window):
         if trackData != None:
             accessToken = trackData["accessToken"]
             accessTokenExpire = trackData["accessTokenExpire"]
+            images = trackData["json"]["album"]["images"]
+            albumArtPath = updateAlbumArt(lastTrackId, trackData["lastTrackId"], images)
+            window.setProperty("albumArt", albumArtPath + ".jpg")
+            window.setProperty("albumArtBg", albumArtPath + "_b.jpg")
             lastTrackId = trackData["lastTrackId"]
             window.setProperty("currSong", trackData["json"]["name"])
             window.setProperty("currArtist", trackData["json"]["artists"][0]["name"])
-            images = trackData["json"]["album"]["images"]
-            window.setProperty("albumArt", images[len(images)-1]["url"])
 
 def getTrackData(lastTrackId, accessToken, accessTokenExpire):
     trackId = getTrackId()
@@ -107,6 +110,35 @@ def getTrackId():
     songLine = songLog[len(songLog)-1]
     x = songLine.find('<spotify:track:')
     return songLine[x+15:-1]
+
+def updateAlbumArt(lastTrackId, currTrackId, images):
+    addonPath = service.getAddonPath()
+    lastTrackPath = f'{addonPath}albumArt/{lastTrackId}'
+    currTrackPath = f'{addonPath}albumArt/{currTrackId}'
+
+    if lastTrackId == currTrackId:
+        return lastTrackPath
+
+    os.system(f'rm {addonPath}albumArt/*')
+
+    #HQ
+    res = requests.get(images[len(images)-1]["url"], stream = True)
+    if res.status_code == 200:
+        with open(currTrackPath + '.jpg', 'wb') as f:
+            shutil.copyfileobj(res.raw, f)
+
+    #LQ
+    res = requests.get(images[0]["url"], stream = True)
+    if res.status_code == 200:
+        with open(currTrackPath + '_b.jpg', 'wb') as f:
+            shutil.copyfileobj(res.raw, f)
+
+    img = Image.open(currTrackPath + '_b.jpg')
+    blur = img.filter(ImageFilter.GaussianBlur(9))
+    blur.save(currTrackPath + '_b.jpg')
+    return currTrackPath
+
+
 
 if (__name__ == '__main__'):
     xbmc.executebuiltin('Dialog.Close(busydialog)')
