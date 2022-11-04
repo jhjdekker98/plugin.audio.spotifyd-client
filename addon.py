@@ -10,6 +10,7 @@ SPOTIFYD_LOG_READ_LINE_AMOUNT = 100
 SPOTIFY_API_URL_TOKEN = 'https://accounts.spotify.com/api/token'
 SPOTIFY_API_URL_TRACK = 'https://api.spotify.com/v1/tracks/'
 THREAD_LIST_FILE_PATH = '/tmp/runningproc.cfg'
+NEW_SONG_LOADED_FILE_PATH = '/tmp/songChange.tmp'
 
 currSong = '<song>'
 currArtist = '<artist>'
@@ -55,6 +56,11 @@ def updateTrackData(window):
 
     while True:
         signatureSuicide(signature)
+
+        if not os.path.exists(NEW_SONG_LOADED_FILE_PATH):
+            continue
+        os.remove(NEW_SONG_LOADED_FILE_PATH)
+
         trackData = getTrackData(lastTrackId, accessToken, accessTokenExpire)
         if trackData != None:
             accessToken = trackData["accessToken"]

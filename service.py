@@ -12,7 +12,7 @@ def getAddonPath():
 def startUp():
     f = open(f"{addonPath}songs.log", "w")
     f.truncate()
-    subprocess.Popen([spotifyPath, '--no-daemon'], stdout=f)
+    subprocess.Popen([f'{spotifyPath} --no-daemon --config-path {addonPath}resources/spotifyd.conf'], shell=True, stdout=f)
 
 def shutDown():
     subprocess.run(["kill", "$(ps | grep spotify | awk '{print $1}')"], shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)
