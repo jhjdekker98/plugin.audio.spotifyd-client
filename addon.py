@@ -126,6 +126,8 @@ def updateAlbumArt(lastTrackId, currTrackId, images):
         return lastTrackPath
 
     os.system(f'rm {addonPath}albumArt/*')
+    
+    images = sorted(images, key=lambda d: d['width'], reverse=True)
 
     #HQ
     res = requests.get(images[len(images)-1]["url"], stream = True)
