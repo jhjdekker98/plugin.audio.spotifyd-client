@@ -10,7 +10,7 @@ SPOTIFYD_LOG_READ_LINE_AMOUNT = 100
 SPOTIFY_API_URL_TOKEN = 'https://accounts.spotify.com/api/token'
 SPOTIFY_API_URL_TRACK = 'https://api.spotify.com/v1/tracks/'
 THREAD_LIST_FILE_PATH = '/tmp/runningproc.cfg'
-NEW_SONG_LOADED_FILE_PATH = '/tmp/songChange.tmp'
+LIGHTNESS_PIXEL_LOCATIONS = [(0.5, 0.5), (0.5, 0.75), (0.35, 0.65), (0.65, 0.65)]
 
 currSong = '<song>'
 currArtist = '<artist>'
@@ -53,22 +53,19 @@ def updateTrackData(window):
     accessTokenExpire = 0
     lastTrackId = ''
     signature = base64.b64encode(str(int(time.time())).encode('ascii')).decode('ascii')
+    window.setProperty("txtCol", "FF000000")
 
     while True:
         signatureSuicide(signature)
-
-        if not os.path.exists(NEW_SONG_LOADED_FILE_PATH):
-            continue
-        os.remove(NEW_SONG_LOADED_FILE_PATH)
-
         trackData = getTrackData(lastTrackId, accessToken, accessTokenExpire)
         if trackData != None:
             accessToken = trackData["accessToken"]
             accessTokenExpire = trackData["accessTokenExpire"]
             images = trackData["json"]["album"]["images"]
-            albumArtPath = updateAlbumArt(lastTrackId, trackData["lastTrackId"], images)
-            window.setProperty("albumArt", albumArtPath + ".jpg")
-            window.setProperty("albumArtBg", albumArtPath + "_b.jpg")
+            albumArt = updateAlbumArt(lastTrackId, trackData["lastTrackId"], images)
+            window.setProperty("txtCol", albumArt["txtCol"])
+            window.setProperty("albumArt", albumArt["path"] + ".jpg")
+            window.setProperty("albumArtBg", albumArt["path"] + "_b.jpg")
             lastTrackId = trackData["lastTrackId"]
             window.setProperty("currSong", trackData["json"]["name"])
             window.setProperty("currArtist", trackData["json"]["artists"][0]["name"])
@@ -110,12 +107,12 @@ def getTrackId():
     f = open(f'{addonPath}songs.log', 'r', -1, 'utf-8')
     songLog = f.read().splitlines()
     f.close()
-    songLog = [k for k in songLog if '<spotify:track:' in k]
+    songLog = [k for k in songLog if '"PLAYER_EVENT": "play"' in k]
     if len(songLog) == 0:
         return None
     songLine = songLog[len(songLog)-1]
-    x = songLine.find('<spotify:track:')
-    return songLine[x+15:-1]
+    x = songLine.find('"TRACK_ID":')
+    return songLine[x+13:x+13+22]
 
 def updateAlbumArt(lastTrackId, currTrackId, images):
     addonPath = service.getAddonPath()
@@ -127,7 +124,7 @@ def updateAlbumArt(lastTrackId, currTrackId, images):
 
     os.system(f'rm {addonPath}albumArt/*')
     
-    images = sorted(images, key=lambda d: d['width'], reverse=True)
+    images = sorted(images, key=lambda d: d['width'], reverse=False)
 
     #HQ
     res = requests.get(images[len(images)-1]["url"], stream = True)
@@ -144,7 +141,19 @@ def updateAlbumArt(lastTrackId, currTrackId, images):
     img = Image.open(currTrackPath + '_b.jpg')
     blur = img.filter(ImageFilter.GaussianBlur(9))
     blur.save(currTrackPath + '_b.jpg')
-    return currTrackPath
+    blur_l = blur.convert('L')
+    lightnessMap = []
+    lightness = 0
+    for loc in LIGHTNESS_PIXEL_LOCATIONS:
+        currLoc = tuple(x * y for x, y in zip(blur.size, loc))
+        lightnessMap.append(blur_l.getpixel(currLoc))
+    for l in lightnessMap:
+        lightness += l
+    lightness = lightness / len(lightnessMap)
+    return {
+        'path': currTrackPath,
+        'txtCol': 'FFFFFFFF' if lightness < 200 else 'FF000000'
+    }
 
 
 

@@ -34,7 +34,7 @@
             <label fallback="Song Title">$INFO[window.property(currSong)]</label>
             <font>WeatherTemp</font>
             <scroll>true</scroll>
-            <textcolor>FFFFFFFF</textcolor>
+            <textcolor>$INFO[window.property(txtCol)]</textcolor>
         </control>
         <control type="label" id="1">
             <top>880</top>
@@ -43,7 +43,7 @@
             <label fallback="Song Artist">$INFO[window.property(currArtist)]</label>
             <font>font_clock</font>
             <scroll>true</scroll>
-            <textcolor>FFFFFFFF</textcolor>
+            <textcolor>$INFO[window.property(txtCol)]</textcolor>
         </control>
     </controls>
 </window>
