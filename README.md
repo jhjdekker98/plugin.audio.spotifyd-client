@@ -26,7 +26,7 @@ The installation process for the plugin is relatively simple, but requires a bit
 
 ### SpotifyD Compilation
 
-Follow [the SpotifyD source compilation steps](https://github.com/Spotifyd/spotifyd/wiki/Installing-on-Ubuntu-%28from-source%29) on your target machine. If you know how to cross-compile for different hardware, feel free to follow [the cross-compilation steps](https://github.com/Spotifyd/spotifyd/wiki/Cross-Compiling-on-Ubuntu) instead.
+Follow [the SpotifyD source compilation steps](https://spotifyd.github.io/spotifyd/installation/index.html) on your target machine. If you know how to cross-compile for different hardware, feel free to follow [the cross-compilation steps](https://github.com/Spotifyd/spotifyd/wiki/Cross-Compiling-on-Ubuntu) instead.
 
 ### Spotify Developer
 
