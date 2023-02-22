@@ -10,6 +10,8 @@ SPOTIFYD_LOG_READ_LINE_AMOUNT = 100
 SPOTIFY_API_URL_TOKEN = 'https://accounts.spotify.com/api/token'
 SPOTIFY_API_URL_TRACK = 'https://api.spotify.com/v1/tracks/'
 THREAD_LIST_FILE_PATH = '/tmp/runningproc.cfg'
+TMP_PATH = '/tmp/spotifyd-client/'
+ALBUM_ART_PATH = f'{TMP_PATH}albumArt/'
 LIGHTNESS_PIXEL_LOCATIONS = [(0.5, 0.5), (0.5, 0.75), (0.35, 0.65), (0.65, 0.65)]
 
 currSong = '<song>'
@@ -103,8 +105,7 @@ def getTrackData(lastTrackId, accessToken, accessTokenExpire):
     }
 
 def getTrackId():
-    addonPath = service.getAddonPath()
-    f = open(f'{addonPath}songs.log', 'r', -1, 'utf-8')
+    f = open(f'{TMP_PATH}songs.log', 'r', -1, 'utf-8')
     songLog = f.read().splitlines()
     f.close()
     songLog = [k for k in songLog if '"PLAYER_EVENT": "play"' in k]
@@ -115,15 +116,15 @@ def getTrackId():
     return songLine[x+13:x+13+22]
 
 def updateAlbumArt(lastTrackId, currTrackId, images):
-    addonPath = service.getAddonPath()
-    lastTrackPath = f'{addonPath}albumArt/{lastTrackId}'
-    currTrackPath = f'{addonPath}albumArt/{currTrackId}'
+    lastTrackPath = f'{ALBUM_ART_PATH}{lastTrackId}'
+    currTrackPath = f'{ALBUM_ART_PATH}{currTrackId}'
 
     if lastTrackId == currTrackId:
         return lastTrackPath
 
-    os.system(f'rm {addonPath}albumArt/*')
-    
+    os.system(f'rm -r {ALBUM_ART_PATH}')
+    os.system(f'mkdir {ALBUM_ART_PATH}')
+
     images = sorted(images, key=lambda d: d['width'], reverse=False)
 
     #HQ

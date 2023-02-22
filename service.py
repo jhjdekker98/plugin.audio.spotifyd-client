@@ -1,4 +1,4 @@
-import xbmcaddon
+import xbmc, xbmcaddon
 import subprocess, os
 
 addon = xbmcaddon.Addon()
@@ -10,9 +10,7 @@ def getAddonPath():
     return addonPath
 
 def startUp():
-    f = open(f"{addonPath}songs.log", "w")
-    f.truncate()
-    subprocess.Popen([f'{spotifyPath} --no-daemon --config-path {addonPath}resources/spotifyd.conf'], shell=True, stdout=f)
+    xbmc.executebuiltin(f'RunScript("{addonPath}runner.py")')
 
 def shutDown():
     subprocess.run(["kill", "$(ps | grep spotify | awk '{print $1}')"], shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)
