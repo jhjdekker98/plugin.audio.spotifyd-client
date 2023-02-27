@@ -1,6 +1,7 @@
-import os, subprocess
+import xbmcaddon
+import subprocess
 
-addonPath = os.path.dirname(os.path.realpath(__file__))
+addonPath = xbmcaddon.Addon().getAddonInfo('path')
 
 fstd = open(f"/tmp/spotifyd-client/songs.log", "w")
 ferr = open(f"/tmp/spotifyd-client/error.log", "w")
