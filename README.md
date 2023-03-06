@@ -28,6 +28,8 @@ The installation process for the plugin is relatively simple, but requires a bit
 
 Follow [the SpotifyD source compilation steps](https://spotifyd.github.io/spotifyd/installation/index.html) on your target machine. If you know how to cross-compile for different hardware, feel free to follow [the cross-compilation steps](https://github.com/Spotifyd/spotifyd/wiki/Cross-Compiling-on-Ubuntu) instead.
 
+Be aware that most installations default to the ALSA audio backend which only supports one program taking over an audio output device at a time. Other audio backends like pulseaudio and rodio fix this. Make sure you compile SpotifyD with the optional feature flag for your preferred audio backend. Rodio should work for most installations. **Note that if you are using the Pulseaudio or Rodio audio backend, there are some lines that need to be uncommented in your SpotifyD configuration file!**
+
 ### Spotify Developer
 
 In order to get the functionalities of the app to work, you need a Spotify Developer account and an app registered in the Spotify Developer dashboard.
